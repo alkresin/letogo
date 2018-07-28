@@ -1,0 +1,50 @@
+LetoGo Functions list
+---------------------
+
+func Init() int8
+func Exit()
+
+func Connect( sAddr string, iPort int ) uint64
+func DisConnect( pconn uint64 )
+
+func CreateTable( pconn uint64, sTable string, sAlias string, sFields string, uiArea uint ) uint64
+func OpenTable( pconn uint64, sTable string, sAlias string, bShared bool, bRdOnly bool ) uint64
+func CloseTable( pt uint64 )
+
+func GetServerVer( pconn uint64 ) string
+
+func Bof( pt uint64 ) bool
+func Eof( pt uint64 ) bool
+func Found( pt uint64 ) bool
+func RecCount( pt uint64 ) uint32
+func RecNo( pt uint64 ) uint32
+
+func GoTop( pt uint64, sTag string )
+func GoBottom( pt uint64, sTag string )
+func GoTo( pt uint64, ulrecno uint32, sTag string )
+func Skip( pt uint64, lToSkip int32, sTag string )
+
+func GetField( pt uint64, uiIndex uint32 ) []byte
+func GetFieldInt( pt uint64, uiIndex uint32 ) int64
+func GetFieldFloat( pt uint64, uiIndex uint32 ) float64
+func PutField( pt uint64, uiIndex uint32, sValue []byte )
+
+func Append( pt uint64 )
+func PutRecord( pt uint64 )
+
+func FieldCount( pt uint64 ) uint32
+func FieldName( pt uint64, uiIndex uint32 ) string
+func FieldType( pt uint64, uiIndex uint32 ) uint32
+func FieldLen( pt uint64, uiIndex uint32 ) uint32
+func FieldDec( pt uint64, uiIndex uint32 ) uint32
+
+func CreateOrder( pt uint64, sTag string, sKey string )
+func SetOrder( pt uint64, sTag string )
+func Seek( pt uint64, sTag string, sKey []byte, uiSoftSeek uint32, uiFindLast uint32 ) bool
+
+func RecLock( pt uint64, ulrecno uint32 ) bool
+func RecUnLock( pt uint64, ulrecno uint32 )
+func IsRecLocked( pt uint64, ulrecno uint32 ) bool
+
+func Delete(pt uint64)
+func Recall(pt uint64)

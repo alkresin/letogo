@@ -1,2 +1,3 @@
-# letogo
-A Go lang package for communication with LetoDB
+## letoGo - a package for Go language, which provides a communication with LetoDb DBMS.
+
+### Preface
