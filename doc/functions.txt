@@ -10,6 +10,7 @@ func DisConnect( pconn uint64 )
 func CreateTable( pconn uint64, sTable string, sAlias string, sFields string, uiArea uint ) uint64
 func OpenTable( pconn uint64, sTable string, sAlias string, bShared bool, bRdOnly bool ) uint64
 func CloseTable( pt uint64 )
+func CloseAll(pconn uint64)
 
 func GetServerVer( pconn uint64 ) string
 
@@ -48,3 +49,5 @@ func IsRecLocked( pt uint64, ulrecno uint32 ) bool
 
 func Delete(pt uint64)
 func Recall(pt uint64)
+
+func Ping(pconn uint64) bool

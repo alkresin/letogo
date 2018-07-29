@@ -4,6 +4,8 @@
 
 #include "_cgo_export.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "cletocl.h"
 
 #if defined( WINNT ) || defined( _Windows ) || defined( __NT__ ) || defined( _WIN32 ) || defined( _WINDOWS_ ) || defined( __WINDOWS_386__ ) || defined( __WIN32__ )
@@ -24,6 +26,7 @@ typedef char * ( PDYN LPLetoGetServerVer) ( LETOCONNECTION * pConnection );
 typedef LETOTABLE * ( PDYN LPLetoDbCreateTable ) ( LETOCONNECTION * pConnection, char * szFile, char * szAlias, char * szFields, unsigned int uiArea );
 typedef LETOTABLE * ( PDYN LPLetoDbOpenTable ) ( LETOCONNECTION * pConnection, char * szFile, char * szAlias, int iShared, int iReadOnly, char * szCdp, unsigned int uiArea, char * szDataFileName, unsigned int uiDFNLen );
 typedef unsigned int ( PDYN LPLetoDbCloseTable ) ( LETOTABLE * pTable );
+typedef int ( PDYN LPLetoCloseAll ) ( LETOCONNECTION * pConnection );
 typedef unsigned int ( PDYN LPLetoDbBof ) ( LETOTABLE * pTable );
 typedef unsigned int ( PDYN LPLetoDbEof ) ( LETOTABLE * pTable );
 typedef unsigned int ( PDYN LPLetoDbRecCount ) ( LETOTABLE * pTable, unsigned long * ulCount );
@@ -51,6 +54,7 @@ typedef unsigned int ( PDYN LPLetoDbRecUnLock ) ( LETOTABLE * pTable, unsigned l
 typedef unsigned int ( PDYN LPLetoDbIsRecLocked ) ( LETOTABLE * pTable, unsigned long ulRecNo, unsigned int * uiRes );
 typedef unsigned int ( PDYN LPLetoDbDelete ) ( LETOTABLE * pTable );
 typedef unsigned int ( PDYN LPLetoDbRecall ) ( LETOTABLE * pTable );
+typedef int ( PDYN LPLetoPing ) ( LETOCONNECTION * pConnection );
 
 LPLetoInit fLetoInit = NULL;
 LPLetoExit fLetoExit = NULL;
@@ -60,6 +64,7 @@ LPLetoGetServerVer fLetoGetServerVer = NULL;
 LPLetoDbCreateTable fLetoDbCreateTable = NULL;
 LPLetoDbOpenTable fLetoDbOpenTable = NULL;
 LPLetoDbCloseTable fLetoDbCloseTable = NULL;
+LPLetoCloseAll fLetoCloseAll = NULL;
 LPLetoDbBof fLetoDbBof = NULL;
 LPLetoDbEof fLetoDbEof = NULL;
 LPLetoDbRecCount fLetoDbRecCount = NULL;
@@ -87,6 +92,8 @@ LPLetoDbRecUnLock fLetoDbRecUnLock = NULL;
 LPLetoDbIsRecLocked fLetoDbIsRecLocked = NULL;
 LPLetoDbDelete fLetoDbDelete = NULL;
 LPLetoDbRecall fLetoDbRecall = NULL;
+
+LPLetoPing fLetoPing = NULL;
 
 static char * pBuffer = NULL;
 static unsigned int iBufLen = 0;
@@ -211,6 +218,7 @@ void leto_UnLoadLib( void )
       fLetoDbCreateTable = NULL;
       fLetoDbOpenTable = NULL;
       fLetoDbCloseTable = NULL;
+      fLetoCloseAll = NULL;
       fLetoDbBof = NULL;
       fLetoDbEof = NULL;
       fLetoDbRecCount = NULL;
@@ -238,6 +246,7 @@ void leto_UnLoadLib( void )
       fLetoDbIsRecLocked = NULL;
       fLetoDbDelete = NULL;
       fLetoDbRecall = NULL;
+      fLetoPing = NULL;
 
       iBufLen = 0;
       free( pBuffer );
@@ -295,6 +304,17 @@ unsigned long leto_DbOpenTable( unsigned long pConnection, char * szFile, char *
 void leto_DbCloseTable( unsigned long pTable )
 {
    fLetoDbCloseTable( (LETOTABLE *)pTable );
+}
+
+void leto_CloseAll( unsigned long pConnection )
+{
+   if( !fLetoCloseAll )
+#if defined( _OS_WIN )
+      fLetoCloseAll = ( LPLetoCloseAll ) GetProcAddress( hLeto, "_LetoCloseAll" );
+#else
+      fLetoCloseAll = ( LPLetoCloseAll ) dlsym( hLeto, "LetoCloseAll" );
+#endif
+   fLetoCloseAll( (LETOCONNECTION *)pConnection );
 }
 
 unsigned int leto_DbBof( unsigned long pTable )
@@ -487,4 +507,15 @@ void leto_DbRecall( unsigned long pTable )
 #endif
 
    fLetoDbRecall( (LETOTABLE *)pTable );
+}
+
+unsigned int leto_Ping( unsigned long  pconn )
+{
+   if( !fLetoPing )
+#if defined( _OS_WIN )
+      fLetoPing = ( LPLetoPing ) GetProcAddress( hLeto, "_LetoPing" );
+#else
+      fLetoPing = ( LPLetoPing ) dlsym( hLeto, "LetoPing" );
+#endif
+   return fLetoPing( (LETOCONNECTION *)pconn );
 }

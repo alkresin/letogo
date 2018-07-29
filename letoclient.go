@@ -2,6 +2,7 @@ package letoGo
 
 /*
 #include <stdlib.h>
+#include <string.h>
 #include <cletocl.h>
 int leto_LoadLib( void );
 void leto_UnLoadLib( void );
@@ -12,6 +13,7 @@ char * leto_GetServerVer( unsigned long pconn );
 unsigned long leto_DbCreateTable( unsigned long pConnection, char * szFile, char * szAlias, char * szFields, unsigned int uiArea );
 unsigned long leto_DbOpenTable( unsigned long pConn, char * szFile, char * szAlias, int iShared, int iReadOnly, char * szCdp, unsigned int uiArea, char * szDataFileName, unsigned int uiDFNLen );
 void leto_DbCloseTable( unsigned long pTable );
+void leto_CloseAll( unsigned long pConnection );
 unsigned int leto_DbBof( unsigned long pTable );
 unsigned int leto_DbEof( unsigned long pTable );
 unsigned int leto_DbFound( unsigned long pTable );
@@ -38,6 +40,7 @@ void leto_DbRecUnLock( unsigned long pTable, unsigned long ulRecNo );
 unsigned int leto_DbIsRecLocked( unsigned long pTable, unsigned long ulRecNo );
 void leto_DbDelete( unsigned long pTable );
 void leto_DbRecall( unsigned long pTable );
+unsigned int leto_Ping( unsigned long  pconn );
 */
 import "C"
 import "unsafe"
@@ -117,6 +120,11 @@ func OpenTable(pconn uint64, sTable string, sAlias string, bShared bool, bRdOnly
 func CloseTable(pt uint64) {
 
 	C.leto_DbCloseTable((_Ctype_ulong)(pt))
+}
+
+func CloseAll(pconn uint64) {
+
+	C.leto_CloseAll((_Ctype_ulong)(pconn))
 }
 
 func GetServerVer(pconn uint64) string {
@@ -348,4 +356,13 @@ func Delete(pt uint64) {
 func Recall(pt uint64) {
 
 	C.leto_DbRecall((_Ctype_ulong)(pt))
+}
+
+func Ping(pconn uint64) bool {
+
+	if C.leto_Ping( (_Ctype_ulong)(pconn) ) == 1 {
+		return true
+	} else {
+		return false
+	}
 }
