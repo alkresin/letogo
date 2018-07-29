@@ -41,6 +41,7 @@ unsigned int leto_DbIsRecLocked( unsigned long pTable, unsigned long ulRecNo );
 void leto_DbDelete( unsigned long pTable );
 void leto_DbRecall( unsigned long pTable );
 unsigned int leto_Ping( unsigned long  pconn );
+#cgo linux LDFLAGS: -ldl
 */
 import "C"
 import "unsafe"
