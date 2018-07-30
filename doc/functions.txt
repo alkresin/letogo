@@ -1,53 +1,57 @@
 LetoGo Functions list
 ---------------------
 
-func Init() int8
-func Exit()
+Init() int8
+Exit()
 
-func Connect( sAddr string, iPort int ) uint64
-func DisConnect( pconn uint64 )
+Connect( sAddr string, iPort int ) uint64
+DisConnect( pconn uint64 )
 
-func CreateTable( pconn uint64, sTable string, sAlias string, sFields string, uiArea uint ) uint64
-func OpenTable( pconn uint64, sTable string, sAlias string, bShared bool, bRdOnly bool ) uint64
-func CloseTable( pt uint64 )
-func CloseAll(pconn uint64)
+CreateTable( pconn uint64, sTable string, sAlias string, sFields string, uiArea uint ) uint64
+OpenTable( pconn uint64, sTable string, sAlias string, bShared bool, bRdOnly bool ) uint64
+CloseTable( pt uint64 )
+CloseAll(pconn uint64)
 
-func GetServerVer( pconn uint64 ) string
+GetServerVer( pconn uint64 ) string
 
-func Bof( pt uint64 ) bool
-func Eof( pt uint64 ) bool
-func Found( pt uint64 ) bool
-func RecCount( pt uint64 ) uint32
-func RecNo( pt uint64 ) uint32
+Bof( pt uint64 ) bool
+Eof( pt uint64 ) bool
+Found( pt uint64 ) bool
+RecCount( pt uint64 ) uint32
+RecNo( pt uint64 ) uint32
 
-func GoTop( pt uint64, sTag string )
-func GoBottom( pt uint64, sTag string )
-func GoTo( pt uint64, ulrecno uint32, sTag string )
-func Skip( pt uint64, lToSkip int32, sTag string )
+GoTop( pt uint64, sTag string )
+GoBottom( pt uint64, sTag string )
+GoTo( pt uint64, ulrecno uint32, sTag string )
+Skip( pt uint64, lToSkip int32, sTag string )
 
-func GetField( pt uint64, uiIndex uint32 ) []byte
-func GetFieldInt( pt uint64, uiIndex uint32 ) int64
-func GetFieldFloat( pt uint64, uiIndex uint32 ) float64
-func PutField( pt uint64, uiIndex uint32, sValue []byte )
+GetField( pt uint64, uiIndex uint32 ) []byte
+GetFieldString(pt uint64, uiIndex uint32) string
+GetFieldInt( pt uint64, uiIndex uint32 ) int64
+GetFieldFloat( pt uint64, uiIndex uint32 ) float64
+PutField( pt uint64, uiIndex uint32, sValue []byte ) uint32
+PutFieldString(pt uint64, uiIndex uint32, sValue string) uint32
+PutFieldInt(pt uint64, uiIndex uint32, iValue int64) uint32
+PutFieldFloat(pt uint64, uiIndex uint32, fValue float64, iDec int) uint32
 
-func Append( pt uint64 )
-func PutRecord( pt uint64 )
+Append( pt uint64 ) uint32
+PutRecord( pt uint64 ) uint32
 
-func FieldCount( pt uint64 ) uint32
-func FieldName( pt uint64, uiIndex uint32 ) string
-func FieldType( pt uint64, uiIndex uint32 ) uint32
-func FieldLen( pt uint64, uiIndex uint32 ) uint32
-func FieldDec( pt uint64, uiIndex uint32 ) uint32
+FieldCount( pt uint64 ) uint32
+FieldName( pt uint64, uiIndex uint32 ) string
+FieldType( pt uint64, uiIndex uint32 ) uint32
+FieldLen( pt uint64, uiIndex uint32 ) uint32
+FieldDec( pt uint64, uiIndex uint32 ) uint32
 
-func CreateOrder( pt uint64, sTag string, sKey string )
-func SetOrder( pt uint64, sTag string )
-func Seek( pt uint64, sTag string, sKey []byte, uiSoftSeek uint32, uiFindLast uint32 ) bool
+CreateOrder( pt uint64, sTag string, sKey string )
+SetOrder( pt uint64, sTag string )
+Seek( pt uint64, sTag string, sKey []byte, uiSoftSeek uint32, uiFindLast uint32 ) bool
 
-func RecLock( pt uint64, ulrecno uint32 ) bool
-func RecUnLock( pt uint64, ulrecno uint32 )
-func IsRecLocked( pt uint64, ulrecno uint32 ) bool
+RecLock( pt uint64, ulrecno uint32 ) bool
+RecUnLock( pt uint64, ulrecno uint32 )
+IsRecLocked( pt uint64, ulrecno uint32 ) bool
 
-func Delete(pt uint64)
-func Recall(pt uint64)
+Delete(pt uint64)
+Recall(pt uint64)
 
-func Ping(pconn uint64) bool
+Ping(pconn uint64) bool

@@ -1,4 +1,4 @@
-package letoGo
+package letogo
 
 /*
 #include <stdlib.h>
@@ -24,9 +24,9 @@ void leto_DbGoTo( unsigned long pTable, unsigned long ulRecNo, char * szTag );
 void leto_DbSkip( unsigned long pTable, long lToSkip, char * szTag );
 unsigned long leto_DbRecNo( unsigned long pTable );
 char * leto_DbGetField( unsigned long pTable, unsigned int uiIndex );
-void leto_DbPutField( unsigned long pTable, unsigned int uiIndex, char * szValue );
-void leto_DbAppend( unsigned long pTable );
-void leto_DbPutRecord( unsigned long pTable );
+unsigned int leto_DbPutField( unsigned long pTable, unsigned int uiIndex, char * szValue );
+unsigned int leto_DbAppend( unsigned long pTable );
+unsigned int leto_DbPutRecord( unsigned long pTable );
 unsigned int leto_DbFieldCount( unsigned long pTable );
 char * leto_DbFieldName( unsigned long pTable, unsigned int uiIndex );
 unsigned int leto_DbFieldType( unsigned long pTable, unsigned int uiIndex );
@@ -99,12 +99,12 @@ func OpenTable(pconn uint64, sTable string, sAlias string, bShared bool, bRdOnly
 	if bShared {
 		iShared = 1
 	} else {
-		iShared = 1
+		iShared = 0
 	}
 	if bRdOnly {
 		iRdOnly = 1
 	} else {
-		iRdOnly = 1
+		iRdOnly = 0
 	}
 
 	csTable := C.CString(sTable)
@@ -233,6 +233,11 @@ func GetField(pt uint64, uiIndex uint32) []byte {
 	return C.GoBytes(unsafe.Pointer(cs), C.int(ilen))
 }
 
+func GetFieldString(pt uint64, uiIndex uint32) string {
+
+	return C.GoString(C.leto_DbGetField((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex)))
+}
+
 func GetFieldInt(pt uint64, uiIndex uint32) int64 {
 
 	var iret int64
@@ -249,19 +254,48 @@ func GetFieldFloat(pt uint64, uiIndex uint32) float64 {
 	return fret
 }
 
-func PutField(pt uint64, uiIndex uint32, sValue []byte) {
+func PutField(pt uint64, uiIndex uint32, sValue []byte) uint32 {
 
-	C.leto_DbPutField((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex), (*C.char)(unsafe.Pointer(&sValue[0])))
+	return (uint32)(C.leto_DbPutField((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex), (*C.char)(unsafe.Pointer(&sValue[0]))))
 }
 
-func Append(pt uint64) {
+func PutFieldString(pt uint64, uiIndex uint32, sValue string) uint32 {
 
-	C.leto_DbAppend((_Ctype_ulong)(pt))
+	csVal := C.CString(sValue)
+	uiRes := (uint32)(C.leto_DbPutField((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex), csVal))
+	C.free(unsafe.Pointer(csVal))
+	return uiRes
 }
 
-func PutRecord(pt uint64) {
+func PutFieldInt(pt uint64, uiIndex uint32, iValue int64) uint32 {
 
-	C.leto_DbPutRecord((_Ctype_ulong)(pt))
+	sValue := strconv.FormatInt(iValue, 10)
+	csVal := C.CString(sValue)
+	uiRes := (uint32)(C.leto_DbPutField((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex), csVal))
+	C.free(unsafe.Pointer(csVal))
+	return uiRes
+}
+
+func PutFieldFloat(pt uint64, uiIndex uint32, fValue float64, iDec int) uint32 {
+
+	if iDec < 0 {
+		iDec = (int)(FieldDec(pt, uiIndex))
+	}
+	sValue := strconv.FormatFloat(fValue, 'f', iDec, 64)
+	csVal := C.CString(sValue)
+	uiRes := (uint32)(C.leto_DbPutField((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex), csVal))
+	C.free(unsafe.Pointer(csVal))
+	return uiRes
+}
+
+func Append(pt uint64) uint32 {
+
+	return (uint32)(C.leto_DbAppend((_Ctype_ulong)(pt)))
+}
+
+func PutRecord(pt uint64) uint32 {
+
+	return (uint32)(C.leto_DbPutRecord((_Ctype_ulong)(pt)))
 }
 
 func FieldCount(pt uint64) uint32 {
@@ -361,7 +395,7 @@ func Recall(pt uint64) {
 
 func Ping(pconn uint64) bool {
 
-	if C.leto_Ping( (_Ctype_ulong)(pconn) ) == 1 {
+	if C.leto_Ping((_Ctype_ulong)(pconn)) == 1 {
 		return true
 	} else {
 		return false

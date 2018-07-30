@@ -379,21 +379,21 @@ char * leto_DbGetField( unsigned long pTable, unsigned int uiIndex )
    return pBuffer;
 }
 
-void leto_DbPutField( unsigned long pTable, unsigned int uiIndex, char * szValue )
+unsigned int leto_DbPutField( unsigned long pTable, unsigned int uiIndex, char * szValue )
 {
-   fLetoDbPutField( (LETOTABLE *)pTable, uiIndex, szValue, strlen( szValue ) );
+   return fLetoDbPutField( (LETOTABLE *)pTable, uiIndex, szValue, strlen( szValue ) );
 }
 
-void leto_DbAppend( unsigned long pTable )
+unsigned int leto_DbAppend( unsigned long pTable )
 {
 
-   fLetoDbAppend( (LETOTABLE *)pTable, 1 );
+   return fLetoDbAppend( (LETOTABLE *)pTable, 1 );
 }
 
-void leto_DbPutRecord( unsigned long pTable )
+unsigned int leto_DbPutRecord( unsigned long pTable )
 {
 
-   fLetoDbPutRecord( (LETOTABLE *)pTable, 1 );
+   return fLetoDbPutRecord( (LETOTABLE *)pTable, 1 );
 }
 
 unsigned int leto_DbFieldCount( unsigned long pTable )
