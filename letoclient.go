@@ -24,7 +24,9 @@ void leto_DbGoTo( unsigned long pTable, unsigned long ulRecNo, char * szTag );
 void leto_DbSkip( unsigned long pTable, long lToSkip, char * szTag );
 unsigned long leto_DbRecNo( unsigned long pTable );
 char * leto_DbGetField( unsigned long pTable, unsigned int uiIndex );
+char * leto_DbGetMemo( unsigned long pTable, unsigned int uiIndex, unsigned long * pLen );
 unsigned int leto_DbPutField( unsigned long pTable, unsigned int uiIndex, char * szValue );
+unsigned int leto_DbPutMemo( unsigned long pTable, unsigned int uiIndex, char * szValue, unsigned int uiLen );
 unsigned int leto_DbAppend( unsigned long pTable );
 unsigned int leto_DbPutRecord( unsigned long pTable );
 unsigned int leto_DbFieldCount( unsigned long pTable );
@@ -233,6 +235,14 @@ func GetField(pt uint64, uiIndex uint32) []byte {
 	return C.GoBytes(unsafe.Pointer(cs), C.int(ilen))
 }
 
+func GetMemo(pt uint64, uiIndex uint32) []byte {
+
+	var cs *_Ctype_char
+	var ullen _Ctype_ulong
+	cs = C.leto_DbGetMemo((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex), &ullen)
+	return C.GoBytes(unsafe.Pointer(cs), C.int(ullen))
+}
+
 func GetFieldString(pt uint64, uiIndex uint32) string {
 
 	return C.GoString(C.leto_DbGetField((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex)))
@@ -257,6 +267,11 @@ func GetFieldFloat(pt uint64, uiIndex uint32) float64 {
 func PutField(pt uint64, uiIndex uint32, sValue []byte) uint32 {
 
 	return (uint32)(C.leto_DbPutField((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex), (*C.char)(unsafe.Pointer(&sValue[0]))))
+}
+
+func PutMemo(pt uint64, uiIndex uint32, sValue []byte, uiLen uint32) uint32 {
+
+	return (uint32)(C.leto_DbPutMemo((_Ctype_ulong)(pt), (_Ctype_uint)(uiIndex), (*C.char)(unsafe.Pointer(&sValue[0])),(_Ctype_uint)(uiLen)))
 }
 
 func PutFieldString(pt uint64, uiIndex uint32, sValue string) uint32 {

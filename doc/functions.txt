@@ -29,10 +29,12 @@ GetField( pt uint64, uiIndex uint32 ) []byte
 GetFieldString(pt uint64, uiIndex uint32) string
 GetFieldInt( pt uint64, uiIndex uint32 ) int64
 GetFieldFloat( pt uint64, uiIndex uint32 ) float64
+GetMemo(pt uint64, uiIndex uint32) []byte
 PutField( pt uint64, uiIndex uint32, sValue []byte ) uint32
 PutFieldString(pt uint64, uiIndex uint32, sValue string) uint32
 PutFieldInt(pt uint64, uiIndex uint32, iValue int64) uint32
 PutFieldFloat(pt uint64, uiIndex uint32, fValue float64, iDec int) uint32
+PutMemo(pt uint64, uiIndex uint32, sValue []byte, uiLen uint32) uint32
 
 Append( pt uint64 ) uint32
 PutRecord( pt uint64 ) uint32
