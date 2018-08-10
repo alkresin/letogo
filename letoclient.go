@@ -1,3 +1,5 @@
+// letoGo package provides a communication with LetoDb DBMS.
+// It uses a LetoDB client shared library, letocl.dll - for windows or letocl.so - for Linux.
 package letogo
 
 /*
